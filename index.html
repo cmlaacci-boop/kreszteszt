@@ -247,6 +247,7 @@
     <button class="submit-btn" id="submit-btn" onclick="checkAnswers()">Teszt kiértékelése</button>
 
     <div id="result-box"></div>
+    <button class="submit-btn" id="restart-btn" onclick="location.reload()" style="display:none; margin-top:15px;">🔄 Új teszt</button>
 
 </div>
 
@@ -1053,8 +1054,134 @@ const quizData = [
         
 
     },
+  {
 
+        question: "48. Személygépkocsival haladva, mit jelez a képen látható kiegészítő tábla?.",
 
+        image: "2848.png",
+
+        options: ["A veszélyes útszakasz 100 méter megtétele után kezdődik.","A veszélyes útszakasz 150 méter megtétele után kezdődik, és 100 méteren áll fenn..","A veszélyes útszakasz 100 méteren áll fenn.",],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Adja magát hogy 100m múlva számithatsz rá."
+        
+
+    },
+    {
+
+        question: "49.Figyelembe kell-e venni az elsőbbséget szabályozó táblákat, ha a forgalmat forgalomirányító fényjelző készülék irányítja?.",
+
+        image: "1440.png",
+
+        options: ["Igen.","Nem.","",],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "A lámpa erősebb mint a tábla azért van ott tábla ha esetleg nem menne a lámpa akkor a tábla szerint kell megálnod vagy elsőbséget adnod."
+        
+
+    },
+      {
+
+        question: "50.Téves tüzelőanyag tankolás bekövetkezésekor, ha a motor már beindításra került, mi a teendő?.",
+
+        image: "",
+
+        options: ["A tartályban lévő benzin-gázolaj tüzelőanyag keverék a következő tankolásig elhasználható..","A legrövidebb úton menjünk mielőbb szakműhelybe.","A motort azonnal le kell állítani, a gépkocsit szakműhelybe kell szállítani.",],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Ha rossz üzemanyagot tankolsz ne inditsd be."
+        
+
+    },
+     {
+
+        question: "51.Célforgalomban behajthatunk-e személygépkocsival a táblával jelzett útszakaszra?",
+
+        image: "1667.png",
+
+        options: ["Igen.","Nem.","Csak áruszállítás céljából.",],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "itt a kiegészitő tábla a fontos mivel ha árut viszel bemehetsz."
+        
+
+    },
+  {
+
+        question: "52.Mikor haladhat át a kormánykerékkel ábrázolt gépkocsijával az ábrán látható útkereszteződésben?",
+
+        image: "3150.png",
+
+        options: ["A 'B' jelű jármű után, az 'A' jelű jármű előtt.","Az 'A' és a 'B' jelű járművek után.","Az 'A' és a 'B' jelű járművek előtt.",],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Az 'A' jelű jármű a táblával védett útvonalon halad. Utána a 'jobbkéz-szabály' lép életbe. A helyes sorrend: A, B, Ön."
+        
+
+    },
+     {
+
+        question: "53.Szabad-e kikerülni a megkülönböztető fényjelzését használó gépjárművet?",
+
+        image: "",
+
+        options: ["Igen, de csak fokozott óvatossággal.","Nem.","",],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "A kék fényjelzést használó álló gépkocsi kikerülése nincs megtiltva."
+        
+
+    },
+        {
+
+        question: "54.Hogyan kell megközelítenie járművével a táblát követő útkereszteződést?",
+
+        image: "2447.png",
+
+        options: ["Úgy kell megközelíteni a kereszteződést, hogy eleget tehessen az elsőbbségadási kötelezettségének.","Az útszakaszra megengedett legnagyobb sebességgel közelíthető meg a kereszteződés.","",],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Ez a tábla feloldja a fő utat lényegében igy elsőbséget kell adnod majd"
+        
+
+    },
+        {
+
+        question: "55.Ön a kormánykerékkel ábrázolt gépkocsit vezeti, van-e elsőbbségadási kötelezettsége?",
+
+        image: "2605.png",
+
+        options: ["Igen, a gyalogos részére.","Nincs.","",],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Mivel a gyalogosnak nincs zebrája igy nincs elsőbsége de ha te jobbra mennél és ott jobbra menne át akkor viszont át kell engedned "
+        
+
+    },
 
                                                                  
 
@@ -1243,10 +1370,21 @@ function checkAnswers() {
     resultBox.innerHTML = `Eredmény: ${totalScore} / ${maxScore} pont (${Math.round(szazalek)}%)<br><br>${uzenet}`;
 
     document.getElementById('submit-btn').style.display = "none";
+    document.getElementById('restart-btn').style.display = "block";
 
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
 }
+
+
+// Véletlenszerű kérdéssorrend és válaszkeverés
+quizData.forEach(q => {
+    const correctAnswer = q.options[q.correct];
+    q.options = q.options.slice().sort(() => Math.random() - 0.5);
+    q.correct = q.options.indexOf(correctAnswer);
+});
+quizData.sort(() => Math.random() - 0.5);
+
 
 loadQuiz();
 
