@@ -1749,13 +1749,18 @@ function checkAnswers() {
 
 
 // Véletlenszerű kérdéssorrend és válaszkeverés
+// Válaszok keverése
 quizData.forEach(q => {
     const correctAnswer = q.options[q.correct];
     q.options = q.options.slice().sort(() => Math.random() - 0.5);
     q.correct = q.options.indexOf(correctAnswer);
 });
+
+// Kérdések keverése
 quizData.sort(() => Math.random() - 0.5);
 
+// Csak 30 kérdés maradjon
+quizData.length = Math.min(30, quizData.length);
 
 loadQuiz();
 
