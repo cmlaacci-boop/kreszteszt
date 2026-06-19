@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+
+<html lang="hu">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nagy KRESZ Teszt csak neked szépszeműke <3</title>
+
+    <style>
+
+        body {
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+            background-color: #f0f4f8;
+
+            color: #1e293b;
+
+            max-width: 700px;
+
+            margin: 40px auto;
+
+            padding: 20px;
+
+        }
+
+        .quiz-container {
+
+            background-color: white;
+
+            padding: 35px;
+
+            border-radius: 16px;
+
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+
+        }
+
+        h1 {
+
+            color: #0f172a;
+
+            text-align: center;
+
+            font-size: 26px;
+
+            margin-bottom: 30px;
+
+        }
+
+        .question {
+
+            margin-bottom: 35px;
+
+            padding: 20px;
+
+            background-color: #f8fafc;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 12px;
+
+        }
+
+        .question-text {
+
+            font-weight: 700;
+
+            font-size: 18px;
+
+            margin-bottom: 15px;
+
+        }
+
+        .question-img {
+
+            display: block;
+
+            max-width: 100%;
+
+            height: auto;
+
+            max-height: 250px;
+
+            margin: 15px auto;
+
+            border-radius: 8px;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+        }
+
+        .options-route {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+            margin-top: 15px;
+
+        }
+
+        button.option-btn {
+
+            background-color: #fff;
+
+            border: 2px solid #cbd5e1;
+
+            padding: 14px 18px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            text-align: left;
+
+            font-size: 16px;
+
+            transition: all 0.2s ease;
+
+        }
+
+        button.option-btn:hover {
+
+            background-color: #f1f5f9;
+
+            border-color: #94a3b8;
+
+        }
+
+        button.option-btn.correct {
+
+            background-color: #d1fae5;
+
+            border-color: #10b981;
+
+            color: #065f46;
+
+            font-weight: bold;
+
+        }
+
+        button.option-btn.wrong {
+
+            background-color: #fee2e2;
+
+            border-color: #ef4444;
+
+            color: #991b1b;
+
+        }
+
+        .feedback {
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            font-weight: 500;
+
+            display: none;
+
+            background-color: #f1f5f9;
+
+        }
+
+        #result-box {
+
+            text-align: center;
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            margin-top: 30px;
+
+            display: none;
+
+            padding: 25px;
+
+            background-color: #e0f2fe;
+
+            border-radius: 12px;
+
+            color: #0369a1;
+
+            border: 2px dashed #0284c7;
+
+        }
+
+        .submit-btn {
+
+            display: block;
+
+            width: 100%;
+
+            background-color: #2563eb;
+
+            color: white;
+
+            border: none;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 25px;
+
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+
+        }
+
+        .submit-btn:hover {
+
+            background-color: #1d4ed8;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+<div class="quiz-container">
+
+    <h1>🚗 Nagy KRESZ Kihívás csak neked szépszeműke <3 🌟</h1>
+
+    <div id="quiz"></div>
+
+    <button class="submit-btn" id="submit-btn" onclick="checkAnswers()">Teszt kiértékelése</button>
+
+    <div id="result-box"></div>
+
+</div>
+
+
+
+<script>
+
+// ITT VANNAK A KÉRDÉSEK. Összesen 30 darab helyet készítettem elő.
+
+// Amelyik kérdéshez NEM akarsz képet, ott hagyd így az image részt: image: ""
+
+const quizData = [
+
+    {
+
+        question: "1. Mi az áthaladási sorrend az alábbi kereszteződésben?",
+
+        image: "első.jpg", // Ide tedd a kép nevét, ami a mappádban van!
+
+        options: ["B - C - A", "C - A - B", "B - A - C"],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Mivel nincsenek elsőbbségadó táblák, a jobbkéz-szabály dönt:<br><br>" +
+
+             "• <b>B (Biciklis) megy elsőként</b>, mert az ő jobb keze felől teljesen üres a kereszteződés, senkit nem kell megvárnia.<br>" +
+
+             "• <b>C (Teherautó) megy másodikként</b>, mert miután a biciklis elment, felszabadult a jobb oldala.<br>" +
+
+             "• <b>A (Piros autó) kanyarodik utolsóként</b>, mert neki a teherautó jött jobbról, így meg kellett várnia őt."
+
+    },
+
+    {
+
+        question: "2. Mi az áthaladási sorrend az alábbi kereszteződésben?",
+
+        image: "második.jpg",
+
+        options: ["A - B - C", "B - C - A", "A - C - B"],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Mivel a furgon elhagyja a főutat és behajt a kereszteződésbe, a jobbkéz-szabály dönt:<br><br>" +
+
+                 "• <b>A (Zöld autó) megy elsőként</b>, mert a főútvonalon halad egyenesen, senki nem keresztezi az útját.<br>" +
+
+                 "• <b>B (Kék furgon) megy másodikként</b>, mert miután behajt a kereszteződésbe, a robogóhoz képest neki van elsőbbsége.<br>" +
+
+                 "• <b>C (Robogó) indul utolsóként</b>, mert a furgon jobb kéz felől érkezik meg elé, így meg kell várnia őt."
+
+    },
+
+    {
+
+        question: "3. Ön a kormánykerékkel ábrázolt gépkocsit vezeti, van-e elsőbbségadási kötelezettsége?",
+
+        image: "harmadik.jpg",
+
+        options: ["Igen, van, az 'A' jelű jármű részére.", "Nincsen", "Megállj! Tilos a behajtás a kereszteződésbe."],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Mind kettőnek macisajt táblája van vagyis nekik elsőbbséget kell adnia neked mert fő úton mész <3"
+
+    },
+
+    {
+
+        question: "4. Ön a kormánykerékkel ábrázolt gépkocsit vezeti, van-e elsőbbségadási kötelezettsége?",
+
+        image: "negyedik.jpg",
+
+        options: ["Nincs", "Igen, van.", "Nem tudom :("],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Egyenrangú kereszteződésben a villamosnak minden esetben elsőbbsége van a közúti járművekkel szemben.<br><br>" +
+
+                 "• <b>A (Villamos) megy elsőként</b>, mert a villamosnak kötelező elsőbbséget adni.<br>" +
+
+                 "• <b>Én megyek utolsóként</b>, mert a kanyarodási ívem keresztezi a villamos pályáját, így meg kell várnom, amíg elhalad."
+
+    },
+
+    {
+
+        question: "5. Ön a kormánykerékkel ábrázolt gépkocsit vezeti, van-e elsőbbségadási kötelezettsége?",
+
+        image: "öt.jpg",
+
+        options: ["Nincs.", "Igen, a gyalogos részére..", "Főútvonal vége (innentől figyelni kell a jobbkéz-szabályra)."],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "A gyalogos-átkelőhelynél a KRESZ szabályai egyértelműek:<br><br>" +
+
+                 "• <b>A (Gyalogos) elsőbbséget élvez</b>, mert a kijelölt gyalogos-átkelőhelyen szándékozik áthaladni.<br>" +
+
+                 "• <b>Nekem kötelező megállnom</b>, mivel balra kanyarodás közben keresztezem a gyalogos útját, és biztosítanom kell a biztonságos áthaladását."
+
+    },
+
+    // --- INNENTŐL KEZDVE TUDSZ ÚJABB KÉRDÉSEKET BEÍRNI VAGY ÁTÍRNI A MINTÁKAT ---
+
+    {
+
+        question: "6. Az ábrázolt útkereszteződésben mi a helyes áthaladási sorrend?",
+
+        image: "hat.jpg",
+
+        options: ["Első a kormánykerekes, majd az 'A' jelű, és végül a 'B' jelű jármű.", "Első az 'A' jelű, majd a kormánykerekes, és végül a 'B' jelű jármű.", "Első a 'B' jelű, majd az 'A' jelű, és végül a kormánykerekes jármű."],
+
+        correct: 0, // Írd át a jó válasz indexére (0, 1 vagy 2)
+
+        points: 3,
+
+        explain: "Jobbra kanyarodásnál a kis ívű manőver és a jobbkéz-szabály dönt:<br><br>" +
+
+                 "• <b>Én megyek elsőként</b>, mert jobbra kanyarodom kis ívben, és így nem keresztezem a többiek útját.<br>" +
+
+                 "• <b>A (Narancssárga autó) megy másodikként</b>, mert ő a következő, akinek a jobb oldala szabaddá válik.<br>" +
+
+                 "• <b>B (Kék autó) megy utolsóként</b>, mert ő balra kanyarodik, így neki kell a legtöbb járműre várnia."
+
+    },
+
+    {
+
+        question: "7. A kormánykerékkel ábrázolt gépkocsit vezetve, haladhat-e tovább ennél a rendőri jelzésnél?",
+
+        image: "hét.jpg",
+
+        options: ["Igen.", "Nem.", ""],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Emlékezz Szépség <3 A rendőr jelzése felülír minden más táblát és szabályt:<br><br>" +
+
+                 "• <b>Várakozom</b>, mert a rendőr vízszintesen kinyújtott karjai a 'falat' jelképezik az elölről és hátulról érkezőknek.<br>" +
+
+                 "• <b>Tilos a továbbhaladás</b> mindazoknak, akik a rendőr karjainak irányából érkeznek, így nekem is meg kell állnom."
+
+    },
+
+    {
+
+        question: "8. Mikor jár el helyesen a 'B' jelű jármű vezetője?",
+
+        image: "nyoc.jpg", // Ha nincs kép, hagyd üresen!
+
+        options: ["Ha a kanyarodó sávba érve először jobbra jelez, majd a másik útra érve balra váltja át az irányjelzőjét.", "Ha már az útkereszteződés előtt jobbra irányjelzést ad, melyet a másik útkereszteződéshez érve megismétel.", "Ha nem használ irányjelzőt, hiszen a kanyarodó sávból csak jobbra lehet fordulni."],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Az irányjelzés szabálya szerint a szándékot időben jelezni kell:<br><br>" +
+
+                 "• <b>A helyes eljárás:</b> Az irányjelzést már a kanyarodási manőver megkezdése előtt, az útkereszteződéshez érve meg kell tenni.<br>" +
+
+                 "• <b>Folyamatosság:</b> Mivel a 'B' jármű egy kanyarodó főútvonalon halad, amely egy kereszteződésen keresztül folytatódik, az irányjelzést az út vonalvezetésének megfelelően a manőver egész ideje alatt fenn kell tartani, vagy szükség esetén megismételni, hogy a többi közlekedő számára egyértelmű legyen a haladási irány."
+
+    },
+
+    // Nyugodtan másold le a fenti blokkokat, amíg meglesz a 30 darab!
+
+    {
+
+        question: "9. Mi a teendője a kormánykerékkel ábrázolt gépkocsi vezetőjének, ebben a forgalmi szituációban?",
+
+        image: "kil.jpg",
+
+        options: ["Meg kell állnia.", "Jobbra kell kanyarodnia.", "Buta rendőr"],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "A rendőr jelzése minden esetben felülírja a közúti jelzéseket:<br><br>" +
+
+                 "• <bHa nem rád néz akkor meg kell állni mert ilyen helyzetben akire néz azok mehetnek<br>" +
+
+                 "• <b>Szabály:</b> Ha nem rád néz akkor nem mehetsz hiába látod oldalról ilyenkor azért fordul el mert másokat engedd el"
+
+    },
+
+       {
+
+        question: "10. Mikor haladhat át a kormánykerékkel ábrázolt gépkocsijával az ábrán látható útkereszteződésben?",
+
+        image: "t.jpg",
+
+        options: ["A 'B' jelű után, az 'A' jelű jármű előtt.", "Az 'A' és 'B' jelű járművek előtt.", "Az 'A' jelű után, a 'B' jelű jármű előtt."],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "A sorrend egyszerű logikája:<br><br>" +
+
+                 "• <b>B</b> megy elsőnek, mert neked meg kell adni a jobb kezet. és indexel jobbra emiatt nem kell foglalkoznia az A jelü kocsival mert nem keresztezi a pályáját<br>" +
+
+                 "• <b>Te</b> mész másodiknak, mert ahogy B elhalad, a te jobb oldalad is szabaddá válik.<br>" +
+
+                 "• <b>A</b> megy utolsónak, mert aki egyenesen halad az erősebb azzal szemben aki kanyarodini akar."
+
+    },
+
+   
+
+        {
+
+        question: "11. Az ábrázolt útkereszteződésben melyik jármű haladhat tovább másodikként?",
+
+        image: "tt.jpg",
+
+        options: ["A kormánykerékkel ábrázolt gépkocsi.", "Az 'A' jelű villamos.", "A 'B' jelű személygépkocsi."],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "A villamos (A) minden esetben elsőbbséget élvez a kereszteződésben.<br><br>" +
+
+                 "• <b>1. Villamos (A)</b>: Mivel egyenesen halad, és villamos, ő halad át elsőként.<br>" +
+
+                 "• <b>2. B jelű autó</b>: A villamos elhaladása után ő következik a jobbkéz-szabály alapján.<br>" +
+
+                 "• <b>3. Te (Kormánykerék)</b>: Te haladsz át utolsóként, mert a kereszteződésben te vagy a 'jobbkéz' szabály szerint hátrányban lévő fél a B jelű autóhoz képest."
+
+    },
+
+            {
+
+        question: "12. Ön a (B) jelű gyalogosként közlekedik. Elsőbbsége van-e a járművekkel szemben?",
+
+        image: "tk.jpg",
+
+        options: ["igen minkét járművek szemben.", "igen de csak a kormánykerékkeé ábrázol gépkocsival szemben",],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Kijelölt gyalogos-átkelőhely hiányában a főútvonalon kanyarodó vagy az arról letérő járművel elsőbbséget adni csak annak az útnak az úttestjén áthaladó gyalogos részére kell, amelyen a jármű továbbhalad. Ezért elsőként az (A) jelű jármű, majd a (B) jelű gyalogos, végül a kormánykerékkel ábrázolt gépkocsi haladhat tovább."
+
+    },
+
+              {
+
+        question: "13. Ön a kormánykerékkel ábrázolt gépkocsit vezeti. Továbbhaladhat-e, ha ezt a forgalomirányító jelzést látja?",
+
+        image: "th.jpg",
+
+        options: ["csak jobbra bekanyarodva", "Nem","Igen",],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "A rendőr karjára ill. vállára merőleges irányból érkező tilos jelzést kap. Meg kell állni!"
+
+    },
+
+                  {
+
+        question: "14. Az ábrázolt forgalmi helyzetben továbbhaladhat-e a kormánykerékkel ábrázolt gépkocsi?",
+
+        image: "tn.jpg",
+
+        options: ["Igen", "Nem",],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Ez a jelzés csak a szemből érkezőnek engedi meg a továbbhaladást."
+
+    },
+
+                      {
+
+        question: "15. Ön a kormánykerékkel ábrázolt gépkocsit vezeti. Haladhat-e egyenesen tovább az útkereszteződésben ennél a jelzésnél?",
+
+        image: "tö.jpg",
+
+        options: ["Igen", "Nem",],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Ez a jelzés az egyenes haladási irányt nem tiltja."
+
+    },
+
+                          {
+
+        question: "16. Ön a kormánykerékkel ábrázolt gépkocsit vezeti. Ennél a forgalomirányító jelzésnél hogyan kell balra bekanyarodnia?",
+
+        image: "that.jpg",
+
+        options: ["A rendőr előtt elhaladva.", "Tetszés szerint a rendőr előtt vagy mögött elhaladva.","A rendőrt megkerülve.",],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Ha a szabad jelzésre érkező külön jelzést nem kap, akkor a rendőrt megkerülve kanyarodhat balra."
+
+    },
+
+                           {
+
+        question: "17. Az ábrázolt forgalmi helyzetben mi a teendője a kormánykerékkel ábrázolt gépkocsi vezetőjének?",
+
+        image: "thét.jpg",
+
+        options: ["Sebességét növelve kell továbbhaladnia.", "Meg kell állnia.","Elsőbbséget kell adnia a balra bekanyarodónak.",],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Ha rendőr vízszintesen maga elé nyújtott karjára merőleges irányból érkezik, meg kell állni.."
+
+    },
+
+                               {
+
+        question: "18. Ön a kormánykerékkel ábrázolt gépkocsit vezeti. Továbbhaladhat-e, ha ezt a forgalomirányító jelzést látja?",
+
+        image: "tny.jpg",
+
+        options: ["Igen.", "NEM",],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "A rendőr karjára ill. vállára merőleges irányból érkező tilos jelzést kap. Meg kell állni! (emlékezz ha az arcát vagy a popsiját látod mindig meg kell állni)"
+
+    },
+
+                                {
+
+        question: "19. Ön a kormánykerékkel ábrázolt gépkocsit vezeti. Ennél a forgalomirányító jelzésnél hogyan kell balra bekanyarodnia?",
+
+        image: "tkil.jpg",
+
+        options: ["Tetszés szerint a rendőr előtt vagy mögött elhaladva.", "A rendőrt megkerülve.","A rendőr előtt elhaladva."],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Erre a jelzésre a rendőr előtt bekanyarodhat balra, nem kell a forgalomirányítót megkerülni.(nézd meg alaposan a bal karját lényegében be hajlitja hogy előtte menj el ezzel is jelzi neked <3)"
+
+    },
+
+                                  {
+
+        question: "20. Ön a kormánykerékkel ábrázolt gépkocsit vezeti. Ennél a forgalomirányító jelzésnél hogyan kell balra bekanyarodnia?",
+
+        image: "husz.jpg",
+
+        options: ["A rendőrt megkerülve.", "A rendőr előtt elhaladva.","Tetszés szerint a rendőr előtt vagy mögött elhaladva."],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Ha a szabad jelzésre érkező külön jelzést nem kap, akkor a rendőrt megkerülve kanyarodhat balra.(itt nem rád néz igy mindenféle képpen meg kell kerülni mert hogy ne ijedjen meg :D)"
+
+    },
+
+
+
+                                      {
+
+        question: "21. Az (A) jejű jármű köteles-e elsőbséget adni lakott területen belül a buszmegállóból elinduló autóbusznak?",
+
+        image: "h1.jpg",
+
+        options: ["Igen, lassítással, akár megállással is, ha ez hirtelen fékezés nélkül megtehető.","Nem."],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Lakott területen belül köteles vagy kiengedni a buszt vagy buszokat ha több van a busz megáloban és ha balra indexel "
+
+    },
+
+                                          {
+
+        question: "22. Mikor haladhat át kormánykerékkel ábrázolt gépkocsijával az ábrán látható útkereszteződésben?",
+
+        image: "hk.jpg",
+
+        options: ["Az (A) és (B) jelű járművek után.","Az 'A' jelű jármű után, a 'B' jelű jármű előtt.","Az 'A' és 'B' jelű járművek előtt."],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Áthaladási sorrend: első az A jelű jármű, majd Ön, végül B  itt is nézd a sárga tábla alatt a vastag fekete vonalat ő Fő utról jönn igy elkell engedned illetve te is fő uton vagy de ilyenkor jobb kéz van megint ezrét meg elsőnek a kamion a B jármű azért nem játszik itt szerepet mert neki elsőbséget kell adnia nektek "
+
+    },
+
+                                            {
+
+        question: "23. Melyik jármű haladhat tovább elsőként?",
+
+        image: "hh.jpg",
+
+        options: ["Az A jelű","B jelű","vagy én"],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Áthaladási sorrend: első az A jelű jármű, majd Ön, végül B.  itt is nézd a táblát a motoros fő uton megy végig igy neki elsőbsége van mert te lejösz róla majd ha nem mennél itt egyenesen hanem jobbra akkor egy időben mehetek"
+
+    },
+
+                                              {
+
+        question: "24. Ön a kormánykerékkel ábrázolt gépkocsit vezeti. Van-e elsőbbségadási kötelezettsége?",
+
+        image: "hn.jpg",
+
+        options: ["Igen.","Nincs.","Tudom de titok"],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Áthaladási sorrend: első az A jelű jármű, majd Ön, végül B.  Nézd meg a vonalakat merre mennek mivel a kék kocsi egyből bekanyarodik igy ő mehet elsőnek majd te mivel neked nincs jobbra senki majd a motors lesz az útolsó "
+
+    },
+
+                                              {
+
+        question: "25. Melyik jármű haladhat tovább elsőként?",
+
+        image: "hö.jpg",
+
+        options: ["Az Ön kormánykerékkel ábrázolt járműve.","Az (A) jelű jármű","Tudom de titok"],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Mivel nincs neked jobbra senki igy te mehetsz elsőnek illetve nem jönnek szemből se aki kis ivben menne ugyan oda ahova te igy mehetsz elsőnek "
+
+    },
+
+                                                  {
+
+        question: "26. Melyik jármű haladhat tovább elsőként?",
+
+        image: "hhat.jpg",
+
+        options: ["A (B) jelű jármű.","Az (A) jelű jármű","vagy én?"],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Ilyenkor mindig a mentő/rendőr/tüzoltő mehet elsőnek majd te és végül a sárga kocsika"
+
+    },
+
+                                                      {
+
+        question: "27. Ön a kormánykerékkel ábrázolt gépkocsit vezeti. Van-e elsőbbségadási kötelezettsége?",
+
+        image: "hhét.jpg",
+
+        options: ["Nincs.","Igen","Majd én eldöntőm :D"],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Van pontosan hisz jobbra van egy kocsid akit elkell engedned :D"
+
+    },
+
+                                                          {
+
+        question: "28. Ön a kormánykerékkel ábrázolt gépkocsit vezeti. Van-e elsőbbségadási kötelezettsége?",
+
+        image: "hny.jpg",
+
+        options: ["Nincs.","Igen","Padlógáz és rajt"],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Itt a gyalogost elkell engedned igaz nincs zebrája de ilyen esetben úgy kell nézni hogy van zebrája ha valed szembeni uton menne át akkor nem kellene elengedned"
+
+    },
+
+                                                          {
+
+        question: "29. Melyik jármű haladhat tovább elsőként?",
+
+        image: "hkil.jpg",
+
+        options: ["A B jelű.","Én","Az A jelű"],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Macisajt van mind a kettő oldalról igy te mehetsz"
+
+    },
+
+                                                              {
+
+        question: "30. Melyik jármű haladhat tovább elsőként?",
+
+        image: "har.jpg",
+
+        options: ["A B jelű.","Én","Az A jelű"],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Megint itt van hogy mivel kis Ívben kanyarodik a szembejövő emiatt ő megy elsőnek majd te és majd a B"
+
+    },
+     {
+
+        question: "31. Párhuzamos közlekedésű úton szabályos-e az ábrázolt helyzetben az A-jelű segédmotoros kerékpárral való kikerülés, ha megfelelő oldaltávolság áll rendelkezésre?",
+
+        image: "he.png",
+
+        options: ["Nem.","Igen",""],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Motoros haladhat el igy melletted 1 sávban "
+
+    },
+         {
+
+        question: "32. Milyen jelzés követi a gyalogos forgalmat irányító fényjelző készülék piros jelzését?",
+
+        image: "hk.png",
+
+        options: ["Piros.","Sárga","Zöld"],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Ezzel találkoztál már ha mentél át zebrán :D "
+
+    },
+         {
+
+        question: "33. Meddig érvényes a tábla hatálya, ha azt lakott terület kezdetét jelző táblával együtt helyezték el?",
+
+        image: "hh.png",
+
+        options: ["A következő útkereszteződésig.","A feloldótábláig.","A lakott terület végéig."],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Mivel lakott terület táblával van kirakva igy teljes útszakaszon be kell tartani olyan mint amikor a falu táblához kirakják a 30km/h táblát akkor csak annyival mehetsz a faluban amig ki nem érsz onnan "
+
+    },
+          {
+
+        question: "34. Megközelítheti-e a vasúti átjárót a kormánykerékkel ábrázolt gépkocsival az útra engedélyezett sebesség felső határát megközelítő tempóban?",
+
+        image: "hn.png",
+
+        options: ["Nem, a sebességet a vasúti átjáró előtt a biztonságos áthaladás érdekében legalább 40 km/h-ra mérsékelni kell.","Igen, mert a teljes sorompó nyitott helyzetben van, az átjáró felé vasúti jármű nem közeledik és a folyamatos áthaladásra lehetőség van.","Legfeljebb akkor, ha a vasúti átjáró biztosítására szolgáló sorompó mellett jelzőőr is tartózkodik és jelzőtárcsájával szabad jelzést ad."],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Az ábrán látható forgalmi helyzetben semmi nem indokolja a sebesség csökkentését. Mivel felfele megy a sorompó vagyis szabad az út  "
+
+    },
+              {
+
+        question: "35. Az ábrázolt útkereszteződésben mi a helyes áthaladási sorrend?",
+
+        image: "hö.png",
+
+        options: ["Első a 'B' jelű gépkocsi, majd az 'A' jelű villamos, és végül a kormánykerékkel ábrázolt gépkocsi."," Első a kormánykerékkel ábrázolt, majd a 'B' jelű gépkocsi, és végül az 'A' jelű villamos.","Első az 'A' jelű villamos, majd a 'B' jelű és végül a kormánykerékkel ábrázolt gépkocsi."],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Ez egy jobb kezes útca és azért mehet a villamos elsőként mert a kék kocsi balra kanyarodik nem jobbra ha jobbra menne akkor a kék mehetne elsőként   "
+
+    },
+             {
+
+        question: "36. Lehet-e elsőbbségadási kötelezettsége a képen látható tanulókocsinak?",
+
+        image: "hat.png",
+
+        options: ["Igen, a gyalogosok részére."," Nem, mert a nyíl alakú zöld jelzésnél kanyarodik.",""],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "A nyíl alakú zöld jelzésnél is elsőbbségük van a gyalogosoknak a kanyarodó járművel szemben azon az úttesten, amelyikre a jármű kanyarodik."
+
+    },
+             {
+
+        question: "37. Milyen járművet vezethet az alábbiak közül 'B' kategóriára érvé-nyesített vezetői engedélyével?",
+
+        image: "",
+
+        options: ["Legfeljebb 150 cm3-es motorkerékpárt."," Kerti traktort.","Legfeljebb 12 személyes kisbuszt."],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "A 'B' kategóriás vezetői engedélyével a 3500 kg-nál kisebb össztömegű gépkocsin kívül még kerti traktort és más lassú járművet is vezethet."
+
+    },
+                 {
+
+        question: "38.A villamos kivétel az általános szabályok alól, ha...",
+
+        image: "",
+
+        options: ["egyenrangú útkereszteződésben bármerről érkezik.","körforgalmat keresztez.","útszűkületben, ha a behajtást jelzőtábla szabályozza."],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Magyarországon 1 hely van ahol a körforgalman keresztül megy a villamos és ez a kérdés erre épül"
+
+    },
+                    {
+
+        question: "39.Lehet-e járművek részére elsőbbségadási kötelezettsége ennél a jelzésnél?",
+
+        image: "309.png",
+
+        options: ["Igen, bármely irányban is megy tovább.","Sohasem, mert a zöld jelzés szabad utat jelez.","Igen, ha balra kanyarodik a járművel."],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Van olyan hely ahol egyszere indulnak szemből is igy őket el kell engedned amint elmennek akkor balra bekanyarodhatsz"
+
+    },
+                      {
+
+        question: "40.Ön a tanulókocsit vezeti. Van-e elsőbbségadási kötelezettsége?",
+
+        image: "3991.png",
+
+        options: ["Nincs.","Igen, van.",""],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "A jobbra bekanyarodónak elsőbbségadási kötelezettsége van az egyenesen haladó kerékpáros részére. mindig elsőbbsége van annak aki egyenesen halad azzal szemben aki kanyarodik be"
+
+    },
+                      {
+
+        question: "41.Szabálytalan várakozás miatt elszállíthatják-e a képen látható gépkocsit?",
+
+        image: "1043.png",
+
+        options: ["Igen.","Nem",""],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Zebra előtt nem parkolunk le"
+
+    },
+                {
+
+        question: "42.Az alábbiak közül milyen megállási szabályra hívja fel a figyelmet a képen látható útburkolati jel?",
+
+        image: "2124.png",
+
+        options: ["Előtte személygépkocsival 5 méteren belül tilos megállni..","Előtte személygépkocsival 15 méteren belül tilos megállni.","Előtte személygépkocsival is minden esetben meg kell állni."],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Ilyen helyzetben tilos megálni"
+
+    },
+            {
+
+        question: "43. Hogyan lehet elkerülni a közúti forgalomban előforduló veszélyhelyzeteket követő baleseteket, az alábbiak közül?",
+
+        image: "",
+
+        options: ["Olyan vezetési stílussal, hogy a járművet meg lehessen állítani bármely akadály előtt.","A vezetés közbeni fékkészenléttel.","A veszély kellő időben valló felismerésével, azok elhárításának megismerésével, időben és módozatában helyes cselekvéssel."],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Mindig figyeld az utat és gondolkodj előre"
+
+    },
+             {
+
+        question: "44. Megkülönböztető fényjelzést használó álló járművet megközelíteni csak...",
+
+        image: "",
+
+        options: ["fokozott óvatossággal szabad.","A vezetés közbeni fékkészenléttel.","állandó sebességgel szabad.", "megállást követően szabad."],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Mindig figyeld az utat és gondolkodj előre"
+
+    },
+                {
+
+        question: "45. Kell-e irányjelzést adni személygépkocsival haladva, ha a kötelező haladási irányt jelző tábla bekanyarodásra utasít?.",
+
+        image: "333.png",
+
+        options: ["Csak akkor, ha az irányjelzés elmulasztása mást félrevezetne.","Igen.","Nem.",],
+
+        correct: 1,
+
+        points: 3,
+
+        explain: "Mivel letérsz az útrol lényegében kell irány jelzés"
+
+    },
+              {
+
+        question: "46. Mit jelez a tábla?.",
+
+        image: "3128.png",
+
+        options: ["Magas szállópor koncentráció miatt a gyermekek, légúti és keringési betegségben szenvedők ne tartózkodjanak az övezetben.","Járműközlekedésre is megnyitott biológiailag aktív, növényzettel borított övezetet, mely nem tartozik behajtási korlátozás alá.","A 'Környezetvédelmi övezet (zóna) vége' jelzőtábláig az úton (övezetben) a gépkocsik nem közlekedhetnek",],
+
+        correct: 2,
+
+        points: 3,
+
+        explain: "Adja magát a tábla illetve a válasz is"
+
+    },
+       {
+
+        question: "47. Az úttesten álló járművet csak a menetirány szerinti bal oldal igénybevételével tudja kikerülni. Kell-e jeleznie a manővert befejező visszatérést az úttest jobb szélére?.",
+
+        image: "",
+
+        options: ["Igen.","Nem.","",],
+
+        correct: 0,
+
+        points: 3,
+
+        explain: "Az úttest felezővonalának az átlépését oda és vissza egyaránt jelezni kell."
+        
+
+    },
+
+
+
+                                                                 
+
+
+
+
+
+];
+
+
+
+function loadQuiz() {
+
+    const quizContainer = document.getElementById('quiz');
+
+    let output = '';
+
+
+
+    quizData.forEach((q, qIndex) => {
+
+        // Ellenőrizzük, van-e megadva kép a kérdéshez
+
+        let imageHtml = '';
+
+        if (q.image && q.image !== "") {
+
+            imageHtml = `<img src="${q.image}" class="question-img" alt="KRESZ szituáció">`;
+
+        }
+
+
+
+        output += `
+
+            <div class="question" id="q-block-${qIndex}">
+
+                <div class="question-text">${q.question} <span style="color:#64748b; font-size:14px; font-weight:normal;">(${q.points} pont)</span></div>
+
+                ${imageHtml}
+
+                <div class="options-route">
+
+                    ${q.options.map((opt, oIndex) => `
+
+                        <button class="option-btn" id="btn-${qIndex}-${oIndex}" onclick="selectOption(${qIndex}, ${oIndex})">
+
+                            ${opt}
+
+                        </button>
+
+                    `).join('')}
+
+                </div>
+
+                <div class="feedback" id="feedback-${qIndex}"></div>
+
+            </div>
+
+        `;
+
+    });
+
+    quizContainer.innerHTML = output;
+
+}
+
+
+
+let userAnswers = {};
+
+
+
+function selectOption(qIndex, oIndex) {
+
+    quizData[qIndex].options.forEach((_, i) => {
+
+        document.getElementById(`btn-${qIndex}-${i}`).style.borderColor = '#cbd5e1';
+
+        document.getElementById(`btn-${qIndex}-${i}`).style.backgroundColor = '#fff';
+
+    });
+
+   
+
+    document.getElementById(`btn-${qIndex}-${oIndex}`).style.borderColor = '#2563eb';
+
+    document.getElementById(`btn-${qIndex}-${oIndex}`).style.backgroundColor = '#eff6ff';
+
+    userAnswers[qIndex] = oIndex;
+
+}
+
+
+
+function checkAnswers() {
+
+    let totalScore = 0;
+
+    let maxScore = 0;
+
+
+
+    quizData.forEach((q, qIndex) => {
+
+        maxScore += q.points;
+
+        const feedbackDiv = document.getElementById(`feedback-${qIndex}`);
+
+        feedbackDiv.style.display = "block";
+
+
+
+        const selected = userAnswers[qIndex];
+
+       
+
+        q.options.forEach((_, oIndex) => {
+
+            const btn = document.getElementById(`btn-${qIndex}-${oIndex}`);
+
+            if (oIndex === q.correct) {
+
+                btn.className = "option-btn correct";
+
+            } else if (selected === oIndex) {
+
+                btn.className = "option-btn wrong";
+
+            }
+
+        });
+
+
+
+        // ITT MÓDOSÍTOTTUK: Most már mindkét esetben kiírja a magyarázatot (q.explain)
+
+        if (selected === q.correct) {
+
+            totalScore += q.points;
+
+            feedbackDiv.innerHTML = `<span style="color:#10b981; font-weight:bold;">Helyes válasz! (+${q.points} pont)</span><br><span style="color:#475569; font-size:15px;">Magyarázat: ${q.explain}</span>`;
+
+            feedbackDiv.style.borderLeft = "4px solid #10b981";
+
+        } else {
+
+            feedbackDiv.innerHTML = `<span style="color:#ef4444; font-weight:bold;">Sajnos hibás.</span><br><span style="color:#475569; font-size:15px;">Magyarázat: ${q.explain}</span>`;
+
+            feedbackDiv.style.borderLeft = "4px solid #ef4444";
+
+        }
+
+    });
+
+
+
+    const resultBox = document.getElementById('result-box');
+
+    resultBox.style.display = "block";
+
+   
+
+    let uzenet = "";
+
+    const szazalek = (totalScore / maxScore) * 100;
+
+
+
+    if(szazalek === 100) {
+
+        uzenet = "🥇 Hibátlan! Teljesen lenyűgöztél, igazi KRESZ professzor vagy! ❤️ Safe utat nekünk!";
+
+    } else if (szazalek >= 75) {
+
+        uzenet = "🥈 Sikeres vizsga! Nagyon ügyes vagy, büszke vagyok rád! Jöhet a jogsi! 🚗";
+
+    } else {
+
+        uzenet = "💔 Ez most nem sikerült, de semmi baj! Gyakoroljunk még egy kicsit együtt, és legközelebb tökéletes lesz! 😘";
+
+    }
+
+
+
+    resultBox.innerHTML = `Eredmény: ${totalScore} / ${maxScore} pont (${Math.round(szazalek)}%)<br><br>${uzenet}`;
+
+    document.getElementById('submit-btn').style.display = "none";
+
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+}
+
+loadQuiz();
+
+</script>
+
+
+
+</body>
+
+</html>
