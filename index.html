@@ -1,119 +1,126 @@
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { overflow-x: hidden; width: 100%; min-height: 100vh; }
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Szavazás</title>
   
-  .page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    font-family: var(--font-sans, sans-serif);
-    position: relative;
-    width: 100%;
-  }
-  .title { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-tertiary, #888); margin-bottom: 0.5rem; }
-  .heading { font-size: 28px; font-weight: 500; color: var(--color-text-primary, #111); margin-bottom: 0.25rem; }
-  .subheading { font-size: 15px; color: var(--color-text-secondary, #555); margin-bottom: 0.5rem; }
-  .date { font-size: 13px; color: var(--color-text-tertiary, #888); margin-bottom: 2rem; }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      overflow-x: hidden; 
+      width: 100%; 
+      min-height: 100vh; 
+      background: #fff; 
+      font-family: var(--font-sans, sans-serif);
+    }
+    
+    .page {
+      min-height: 100vh; /* Kitölti a teljes mobilkijelzőt, nem lesz távoli */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      position: relative;
+      width: 100%;
+    }
+    
+    .title { font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-tertiary, #888); margin-bottom: 0.75rem; }
+    .heading { font-size: 32px; font-weight: bold; color: var(--color-text-primary, #111); margin-bottom: 0.5rem; }
+    .subheading { font-size: 16px; color: var(--color-text-secondary, #555); margin-bottom: 0.5rem; }
+    .date { font-size: 13px; color: var(--color-text-tertiary, #888); margin-bottom: 2.5rem; }
 
-  .options {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    width: 100%;
-    max-width: 340px;
-    margin-bottom: 2rem;
-    position: relative;
-  }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 340px;
+      margin-bottom: 2rem;
+      position: relative;
+    }
 
-  .option-btn {
-    border: 0.5px solid var(--color-border-secondary, #ccc);
-    border-radius: var(--border-radius-lg, 12px);
-    background: var(--color-background-primary, #fff);
-    padding: 1rem 1.25rem;
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    font-family: var(--font-sans, sans-serif);
-  }
-  .option-btn:hover { background: var(--color-background-secondary, #f5f5f5); }
-  .option-btn.highlight { border: 2px solid #D4537E; background: #FBEAF0; }
-  .option-btn.highlight:hover { background: #F4C0D1; }
+    .option-btn {
+      border: 0.5px solid var(--color-border-secondary, #ccc);
+      border-radius: var(--border-radius-lg, 16px);
+      background: var(--color-background-primary, #fff);
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      font-family: inherit;
+    }
+    .option-btn:hover { background: var(--color-background-secondary, #f5f5f5); }
+    .option-btn.highlight { border: 2px solid #D4537E; background: #FBEAF0; }
 
-  .option-btn.floating {
-    position: fixed;
-    z-index: 50;
-    width: 280px;
-    max-width: calc(100vw - 32px); /* Ne lógjon ki kis kijelzőn sem */
-    transition: left 0.3s cubic-bezier(.22,1,.36,1), top 0.3s cubic-bezier(.22,1,.36,1), transform .2s ease, box-shadow .2s ease;
-    pointer-events: auto;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0,0,0,.12);
-  }
-  .option-btn.floating:hover{
-    transform: scale(1.04);
-  }
+    /* Alapból normális gombként jelenik meg a listában */
+    .option-btn.floating {
+      width: 100%;
+    }
+    
+    /* Csak akkor kap fix pozíciót a képernyőn, ha elmenekül */
+    .option-btn.floating.fled {
+      position: fixed;
+      z-index: 50;
+      width: 310px;
+      max-width: calc(100vw - 32px);
+      transition: left 0.3s cubic-bezier(.22,1,.36,1), top 0.3s cubic-bezier(.22,1,.36,1);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
 
-  .heading{
-    background: linear-gradient(135deg,#D4537E,#ff8fb1);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-  }
+    .heading {
+      background: linear-gradient(135deg,#D4537E,#ff8fb1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-  .avatar {
-    width: 44px; height: 44px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
-    background: var(--color-background-secondary, #eee);
-    border: 1.5px solid var(--color-border-tertiary, #ddd);
-  }
-  .avatar.pink { background: #F4C0D1; border-color: #ED93B1; }
+    .avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+      background: var(--color-background-secondary, #eee);
+      border: 1.5px solid var(--color-border-tertiary, #ddd);
+    }
+    .avatar.pink { background: #F4C0D1; border-color: #ED93B1; }
 
-  .option-label { font-size: 15px; font-weight: 500; color: var(--color-text-primary, #111); }
-  .option-sub { font-size: 12px; color: var(--color-text-secondary, #555); margin-top: 2px; }
-  .option-btn.highlight .option-sub { color: #993556; }
+    .option-label { font-size: 16px; font-weight: 600; color: var(--color-text-primary, #111); }
+    .option-sub { font-size: 13px; color: var(--color-text-secondary, #555); margin-top: 2px; }
+    .option-btn.highlight .option-sub { color: #993556; }
 
-  .ghost {
-    height: 76px;
-    border-radius: var(--border-radius-lg, 12px);
-    background: var(--color-background-secondary, #eee);
-    border: 0.5px dashed var(--color-border-tertiary, #ccc);
-    opacity: 0.4;
-    width: 100%;
-  }
+    .result {
+      display: none; 
+      min-height: 100vh;
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2rem;
+      animation: fadeIn 0.5s ease;
+      text-align: center;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    .result-circle {
+      width: 100px; height: 100px; border-radius: 50%;
+      background: #FBEAF0; border: 2px solid #ED93B1;
+      display: flex; align-items: center; justify-content: center; font-size: 48px;
+    }
+    .result-title { font-size: 26px; font-weight: bold; color: var(--color-text-primary, #111); }
+    .result-msg { font-size: 16px; color: var(--color-text-secondary, #555); max-width: 290px; line-height: 1.6; }
+    .result-date { font-size: 13px; color: var(--color-text-tertiary, #888); padding: 6px 16px; border: 0.5px solid var(--color-border-tertiary, #ccc); border-radius: 999px; }
+    .reset-btn { margin-top: 1.5rem; font-size: 14px; color: var(--color-text-tertiary, #888); background: none; border: none; cursor: pointer; padding: 6px 12px; border-radius: 6px; font-family: inherit; }
+    .reset-btn:hover { background: var(--color-background-secondary, #eee); }
 
-  .result {
-    display: none; 
-    min-height: 100vh;
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center;
-    gap: 1.25rem;
-    padding: 1.5rem;
-    animation: fadeIn 0.5s ease;
-    text-align: center;
-  }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-  .result-circle {
-    width: 90px; height: 90px; border-radius: 50%;
-    background: #FBEAF0; border: 2px solid #ED93B1;
-    display: flex; align-items: center; justify-content: center; font-size: 44px;
-  }
-  .result-title { font-size: 24px; font-weight: 500; color: var(--color-text-primary, #111); }
-  .result-msg { font-size: 15px; color: var(--color-text-secondary, #555); max-width: 280px; line-height: 1.6; }
-  .result-date { font-size: 12px; color: var(--color-text-tertiary, #888); padding: 4px 14px; border: 0.5px solid var(--color-border-tertiary, #ccc); border-radius: 999px; }
-  .reset-btn { margin-top: 1rem; font-size: 13px; color: var(--color-text-tertiary, #888); background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: var(--border-radius-md, 6px); font-family: var(--font-sans, sans-serif); }
-  .reset-btn:hover { background: var(--color-background-secondary, #eee); }
-
-  .hearts { position: fixed; top:0;left:0;right:0;bottom:0; pointer-events:none; z-index:200; overflow:hidden; }
-  .heart { position:absolute; font-size:22px; animation: floatUp 2.5s ease-out forwards; opacity:0; }
-  @keyframes floatUp { 0%{opacity:1;transform:translateY(0) scale(1);} 80%{opacity:0.8;} 100%{opacity:0;transform:translateY(-320px) scale(1.4);} }
-</style>
+    .hearts { position: fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:200; overflow:hidden; }
+    .heart { position:absolute; font-size:24px; animation: floatUp 2.5s ease-out forwards; opacity:0; }
+    @keyframes floatUp { 0%{opacity:1; transform:translateY(0) scale(1);} 80%{opacity:0.8;} 100%{opacity:0; transform:translateY(-340px) scale(1.4);} }
+  </style>
+</head>
+<body>
 
 <div class="hearts" id="hearts"></div>
 
@@ -123,7 +130,7 @@
   <p class="subheading">Válassz egyet az alábbiak közül</p>
   <p class="date" id="today-date"></p>
 
-  <div class="options">
+  <div class="options" id="options-container">
     <button class="option-btn highlight" onclick="choose()">
       <div class="avatar pink">👸</div>
       <div>
@@ -131,9 +138,6 @@
         <p class="option-sub">A mai és minden nap legszebb ✨</p>
       </div>
     </button>
-    <div class="ghost" id="ghost1"></div>
-    <div class="ghost" id="ghost2"></div>
-    <div class="ghost" id="ghost3"></div>
   </div>
 </div>
 
@@ -171,6 +175,7 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
 const picked = shuffle(funnyNames).slice(0, 3);
 const floatingBtns = [];
+const container = document.getElementById('options-container');
 
 function getSzepszemukeRect() {
   const btn = document.querySelector('.option-btn.highlight');
@@ -179,18 +184,17 @@ function getSzepszemukeRect() {
 
 function isTooClose(x, y, btnWidth, btnHeight, safe) {
   return (
-    x < safe.right + 15 &&
-    x + btnWidth > safe.left - 15 &&
-    y < safe.bottom + 15 &&
-    y + btnHeight > safe.top - 15
+    x < safe.right + 20 &&
+    x + btnWidth > safe.left - 20 &&
+    y < safe.bottom + 20 &&
+    y + btnHeight > safe.top - 20
   );
 }
 
 function safePosition(btn) {
   const safe = getSzepszemukeRect();
-  const btnRect = btn.getBoundingClientRect();
-  const btnWidth = btnRect.width || 280;
-  const btnHeight = btnRect.height || 76;
+  const btnWidth = btn.offsetWidth || 280; 
+  const btnHeight = btn.offsetHeight || 76;
   
   const maxX = window.innerWidth - btnWidth - 16;
   const maxY = window.innerHeight - btnHeight - 16;
@@ -200,17 +204,9 @@ function safePosition(btn) {
     x = 8 + Math.random() * Math.max(1, maxX);
     y = 8 + Math.random() * Math.max(1, maxY);
     tries++;
-  } while (tries < 40 && isTooClose(x, y, btnWidth, btnHeight, safe));
+  } while (tries < 50 && isTooClose(x, y, btnWidth, btnHeight, safe));
   
   return { x, y };
-}
-
-function positionToGhost(btn, ghostId) {
-  const gh = document.getElementById(ghostId);
-  if (!gh) return;
-  const ghRect = gh.getBoundingClientRect();
-  btn.style.left = ghRect.left + 'px';
-  btn.style.top = ghRect.top + 'px';
 }
 
 picked.forEach((person, i) => {
@@ -224,37 +220,42 @@ picked.forEach((person, i) => {
       <p class="option-sub">${person.sub}</p>
     </div>`;
 
-  document.body.appendChild(btn);
+  container.appendChild(btn);
   floatingBtns.push(btn);
-
-  // Kezdeti pozicionálás a ghost elemekre (késleltetve, hogy a DOM renderelődése pontos legyen)
-  setTimeout(() => {
-    positionToGhost(btn, 'ghost' + (i + 1));
-  }, 50);
 
   btn.addEventListener('mousemove', (e) => {
     const r = btn.getBoundingClientRect();
     const dx = e.clientX - (r.left + r.width / 2);
     const dy = e.clientY - (r.top + r.height / 2);
     const dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist < 50) flee(btn);
+    if (dist < 60) flee(btn);
   });
 
   btn.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // Megakadályozza a click eseményt mobilon
+    e.preventDefault();
     flee(btn);
   }, { passive: false });
 });
 
 function flee(btn) {
+  if (!btn.classList.contains('fled')) {
+    const rect = btn.getBoundingClientRect();
+    btn.style.width = Math.min(310, window.innerWidth - 32) + 'px';
+    btn.classList.add('fled');
+    document.body.appendChild(btn);
+  }
+  
   const pos = safePosition(btn);
   btn.style.left = pos.x + 'px';
   btn.style.top = pos.y + 'px';
 }
 
-// Ha átméretezik a kijelzőt (vagy elforgatják a mobilt), ne essenek szét a gombok
 window.addEventListener('resize', () => {
-  floatingBtns.forEach(btn => flee(btn));
+  floatingBtns.forEach(btn => {
+    if (btn.classList.contains('fled') && btn.style.display !== 'none') {
+      flee(btn);
+    }
+  });
 });
 
 function spawnHearts() {
@@ -287,9 +288,16 @@ function choose() {
 function resetVote() {
   document.getElementById('result-view').style.display = 'none';
   document.getElementById('voting-view').style.display = 'flex';
-  floatingBtns.forEach((btn, i) => {
+  
+  floatingBtns.forEach((btn) => {
     btn.style.display = '';
-    positionToGhost(btn, 'ghost' + (i + 1));
+    btn.classList.remove('fled');
+    btn.style.left = '';
+    btn.style.top = '';
+    btn.style.width = '';
+    container.appendChild(btn);
   });
 }
 </script>
+</body>
+</html>
