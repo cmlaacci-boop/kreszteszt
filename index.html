@@ -1,21 +1,23 @@
-
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { overflow-x: hidden; width: 100%; min-height: 100vh; }
+  
   .page {
-    min-height: 520px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
     text-align: center;
-    font-family: var(--font-sans);
+    font-family: var(--font-sans, sans-serif);
     position: relative;
+    width: 100%;
   }
-  .title { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 0.5rem; }
-  .heading { font-size: 28px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.25rem; }
-  .subheading { font-size: 15px; color: var(--color-text-secondary); margin-bottom: 0.5rem; }
-  .date { font-size: 13px; color: var(--color-text-tertiary); margin-bottom: 2rem; }
+  .title { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-tertiary, #888); margin-bottom: 0.5rem; }
+  .heading { font-size: 28px; font-weight: 500; color: var(--color-text-primary, #111); margin-bottom: 0.25rem; }
+  .subheading { font-size: 15px; color: var(--color-text-secondary, #555); margin-bottom: 0.5rem; }
+  .date { font-size: 13px; color: var(--color-text-tertiary, #888); margin-bottom: 2rem; }
 
   .options {
     display: flex;
@@ -24,12 +26,13 @@
     width: 100%;
     max-width: 340px;
     margin-bottom: 2rem;
+    position: relative;
   }
 
   .option-btn {
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--border-radius-lg);
-    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-secondary, #ccc);
+    border-radius: var(--border-radius-lg, 12px);
+    background: var(--color-background-primary, #fff);
     padding: 1rem 1.25rem;
     cursor: pointer;
     text-align: left;
@@ -37,9 +40,9 @@
     align-items: center;
     gap: 12px;
     width: 100%;
-    font-family: var(--font-sans);
+    font-family: var(--font-sans, sans-serif);
   }
-  .option-btn:hover { background: var(--color-background-secondary); }
+  .option-btn:hover { background: var(--color-background-secondary, #f5f5f5); }
   .option-btn.highlight { border: 2px solid #D4537E; background: #FBEAF0; }
   .option-btn.highlight:hover { background: #F4C0D1; }
 
@@ -47,17 +50,14 @@
     position: fixed;
     z-index: 50;
     width: 280px;
-    transition: left 0.35s cubic-bezier(.22,1,.36,1), top 0.35s cubic-bezier(.22,1,.36,1), transform .2s ease, box-shadow .2s ease;
+    max-width: calc(100vw - 32px); /* Ne lógjon ki kis kijelzőn sem */
+    transition: left 0.3s cubic-bezier(.22,1,.36,1), top 0.3s cubic-bezier(.22,1,.36,1), transform .2s ease, box-shadow .2s ease;
     pointer-events: auto;
     backdrop-filter: blur(10px);
     box-shadow: 0 10px 30px rgba(0,0,0,.12);
   }
   .option-btn.floating:hover{
     transform: scale(1.04);
-  }
-
-  .options{
-    position:relative;
   }
 
   .heading{
@@ -69,26 +69,34 @@
   .avatar {
     width: 44px; height: 44px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
-    background: var(--color-background-secondary);
-    border: 1.5px solid var(--color-border-tertiary);
+    background: var(--color-background-secondary, #eee);
+    border: 1.5px solid var(--color-border-tertiary, #ddd);
   }
   .avatar.pink { background: #F4C0D1; border-color: #ED93B1; }
 
-  .option-label { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
-  .option-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+  .option-label { font-size: 15px; font-weight: 500; color: var(--color-text-primary, #111); }
+  .option-sub { font-size: 12px; color: var(--color-text-secondary, #555); margin-top: 2px; }
   .option-btn.highlight .option-sub { color: #993556; }
 
   .ghost {
     height: 76px;
-    border-radius: var(--border-radius-lg);
-    background: var(--color-background-secondary);
-    border: 0.5px dashed var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg, 12px);
+    background: var(--color-background-secondary, #eee);
+    border: 0.5px dashed var(--color-border-tertiary, #ccc);
     opacity: 0.4;
+    width: 100%;
   }
 
   .result {
-    display: none; flex-direction: column; align-items: center; gap: 1.25rem;
+    display: none; 
+    min-height: 100vh;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 1.5rem;
     animation: fadeIn 0.5s ease;
+    text-align: center;
   }
   @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
   .result-circle {
@@ -96,11 +104,11 @@
     background: #FBEAF0; border: 2px solid #ED93B1;
     display: flex; align-items: center; justify-content: center; font-size: 44px;
   }
-  .result-title { font-size: 24px; font-weight: 500; color: var(--color-text-primary); }
-  .result-msg { font-size: 15px; color: var(--color-text-secondary); max-width: 280px; line-height: 1.6; }
-  .result-date { font-size: 12px; color: var(--color-text-tertiary); padding: 4px 14px; border: 0.5px solid var(--color-border-tertiary); border-radius: 999px; }
-  .reset-btn { margin-top: 1rem; font-size: 13px; color: var(--color-text-tertiary); background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: var(--border-radius-md); font-family: var(--font-sans); }
-  .reset-btn:hover { background: var(--color-background-secondary); }
+  .result-title { font-size: 24px; font-weight: 500; color: var(--color-text-primary, #111); }
+  .result-msg { font-size: 15px; color: var(--color-text-secondary, #555); max-width: 280px; line-height: 1.6; }
+  .result-date { font-size: 12px; color: var(--color-text-tertiary, #888); padding: 4px 14px; border: 0.5px solid var(--color-border-tertiary, #ccc); border-radius: 999px; }
+  .reset-btn { margin-top: 1rem; font-size: 13px; color: var(--color-text-tertiary, #888); background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: var(--border-radius-md, 6px); font-family: var(--font-sans, sans-serif); }
+  .reset-btn:hover { background: var(--color-background-secondary, #eee); }
 
   .hearts { position: fixed; top:0;left:0;right:0;bottom:0; pointer-events:none; z-index:200; overflow:hidden; }
   .heart { position:absolute; font-size:22px; animation: floatUp 2.5s ease-out forwards; opacity:0; }
@@ -120,7 +128,7 @@
       <div class="avatar pink">👸</div>
       <div>
         <p class="option-label">Szépszemüke</p>
-        <p class="option-sub">Csak is te lehetsz ✨</p>
+        <p class="option-sub">A mai és minden nap legszebb ✨</p>
       </div>
     </button>
     <div class="ghost" id="ghost1"></div>
@@ -169,25 +177,40 @@ function getSzepszemukeRect() {
   return btn ? btn.getBoundingClientRect() : { left: 0, top: 0, right: 340, bottom: 100 };
 }
 
-function isTooClose(x, y, safe) {
+function isTooClose(x, y, btnWidth, btnHeight, safe) {
   return (
-    x < safe.right + 20 &&
-    x + 280 > safe.left - 20 &&
-    y < safe.bottom + 20 &&
-    y + 76 > safe.top - 20
+    x < safe.right + 15 &&
+    x + btnWidth > safe.left - 15 &&
+    y < safe.bottom + 15 &&
+    y + btnHeight > safe.top - 15
   );
 }
 
-function safePosition(safe) {
-  const maxX = window.innerWidth - 290;
-  const maxY = window.innerHeight - 90;
+function safePosition(btn) {
+  const safe = getSzepszemukeRect();
+  const btnRect = btn.getBoundingClientRect();
+  const btnWidth = btnRect.width || 280;
+  const btnHeight = btnRect.height || 76;
+  
+  const maxX = window.innerWidth - btnWidth - 16;
+  const maxY = window.innerHeight - btnHeight - 16;
+  
   let x, y, tries = 0;
   do {
-    x = 10 + Math.random() * maxX;
-    y = 10 + Math.random() * maxY;
+    x = 8 + Math.random() * Math.max(1, maxX);
+    y = 8 + Math.random() * Math.max(1, maxY);
     tries++;
-  } while (tries < 30 && isTooClose(x, y, safe));
+  } while (tries < 40 && isTooClose(x, y, btnWidth, btnHeight, safe));
+  
   return { x, y };
+}
+
+function positionToGhost(btn, ghostId) {
+  const gh = document.getElementById(ghostId);
+  if (!gh) return;
+  const ghRect = gh.getBoundingClientRect();
+  btn.style.left = ghRect.left + 'px';
+  btn.style.top = ghRect.top + 'px';
 }
 
 picked.forEach((person, i) => {
@@ -201,38 +224,38 @@ picked.forEach((person, i) => {
       <p class="option-sub">${person.sub}</p>
     </div>`;
 
-  const gh = document.getElementById('ghost' + (i + 1));
-  const ghRect = gh.getBoundingClientRect();
-  btn.style.left = ghRect.left + 'px';
-  btn.style.top = (ghRect.top + window.scrollY) + 'px';
-
   document.body.appendChild(btn);
   floatingBtns.push(btn);
 
-  
+  // Kezdeti pozicionálás a ghost elemekre (késleltetve, hogy a DOM renderelődése pontos legyen)
+  setTimeout(() => {
+    positionToGhost(btn, 'ghost' + (i + 1));
+  }, 50);
 
   btn.addEventListener('mousemove', (e) => {
     const r = btn.getBoundingClientRect();
     const dx = e.clientX - (r.left + r.width / 2);
     const dy = e.clientY - (r.top + r.height / 2);
     const dist = Math.sqrt(dx*dx + dy*dy);
-
-    // csak akkor meneküljön el, ha tényleg ráhúzza az egeret a névre
-    if (dist < 45) flee(btn);
+    if (dist < 50) flee(btn);
   });
 
   btn.addEventListener('touchstart', (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Megakadályozza a click eseményt mobilon
     flee(btn);
   }, { passive: false });
 });
 
 function flee(btn) {
-  const safe = getSzepszemukeRect();
-  const pos = safePosition(safe);
+  const pos = safePosition(btn);
   btn.style.left = pos.x + 'px';
   btn.style.top = pos.y + 'px';
 }
+
+// Ha átméretezik a kijelzőt (vagy elforgatják a mobilt), ne essenek szét a gombok
+window.addEventListener('resize', () => {
+  floatingBtns.forEach(btn => flee(btn));
+});
 
 function spawnHearts() {
   const c = document.getElementById('hearts');
@@ -258,20 +281,15 @@ function choose() {
     document.getElementById('voting-view').style.display = 'none';
     const rv = document.getElementById('result-view');
     rv.style.display = 'flex';
-    rv.style.flexDirection = 'column';
-    rv.style.alignItems = 'center';
   }, 600);
 }
 
 function resetVote() {
   document.getElementById('result-view').style.display = 'none';
   document.getElementById('voting-view').style.display = 'flex';
-  floatingBtns.forEach(b => {
-    b.style.display = '';
-    const safe = getSzepszemukeRect();
-    const pos = safePosition(safe);
-    b.style.left = pos.x + 'px';
-    b.style.top = pos.y + 'px';
+  floatingBtns.forEach((btn, i) => {
+    btn.style.display = '';
+    positionToGhost(btn, 'ghost' + (i + 1));
   });
 }
 </script>
